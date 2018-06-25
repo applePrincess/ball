@@ -20,9 +20,7 @@ instance Unit Player where
   boundary a = B (Player.position a, V (r, r, r))
     where r = radius a
   addForce pl f = pl { acceleration = let f' = f ÷ (mass pl) in acceleration pl + f'}
-
-updatePlayerWithTime :: Player -> Double -> Player
-updatePlayerWithTime pl dt = pl
-                             { velocity = velocity pl + acceleration pl × dt
-                             , Player.position = Player.position pl + velocity pl × dt
-                             }
+  update pl dt = pl
+                 { velocity = velocity pl + acceleration pl × dt
+                 , Player.position = Player.position pl + velocity pl × dt
+                 }

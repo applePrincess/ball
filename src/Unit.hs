@@ -1,10 +1,11 @@
 {-# LANGUAGE DefaultSignatures #-}
 module Unit where
 
-type Force = Vector
+type Force        = Vector
 type Acceleration = Vector
-type Velocity = Vector
-type Position = Vector
+type Velocity     = Vector
+type Position     = Vector
+type Time         = Double
 
 class Unit a where
   isCollide :: Unit b => a -> b -> Bool
@@ -16,6 +17,7 @@ class Unit a where
   position :: a -> Position
   addForce :: a -> Force -> a
   boundary :: a -> Boundary
+  update :: a -> Time -> a
 
 -- | Vector component of x, y, z axes.
 newtype Vector = V (Double, Double, Double)
@@ -35,17 +37,23 @@ instance Num Vector where
   abs (V (a, b, c)) = V (abs a, abs b, abs c)
   signum (V (a, b, c)) = V (signum a, signum b, signum c)
 
--- | dot product
+-- | Unit vector
+unitVector :: Vector
+unitVector = V (1, 1, 1)
+
+-- | Dot product
 (⋅) :: Vector -> Vector -> Double
 V (a, b, c) ⋅ V (d, e, f) = a * d + b * e + c * f
-
+infix 7 ⋅
 -- | Element-wise division
 (÷) :: Vector -> Double -> Vector
 V (a, b, c) ÷ n = V (a/n, b/n, c/n)
+infix 7 ÷
 
 -- | Element-wise multiplication
 (×) :: Vector -> Double -> Vector
 (V (a, b, c)) × n = V (a*n, b*n, c*n)
+infix 7 ×
 
 newtype Boundary = B (Position, Position)
 
