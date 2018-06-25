@@ -6,6 +6,7 @@ license:     MIT
 github:      appleprincess/ball
 
 dependencies:
+  - array
   - base > 4 && < 5
 
 library:
@@ -14,3 +15,6 @@ library:
 executable:
   source-dirs:  app
   main:         Main.hs
+  dependencies:
+    - ball
+    - Yampa
