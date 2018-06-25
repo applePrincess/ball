@@ -1,0 +1,6 @@
+*~
+*.hi
+*.o
+*.exe
+.stack-work
+*.cabal

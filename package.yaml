@@ -1,0 +1,16 @@
+name:        ball
+author:      appleprincess<apppleprincess@appleprincess.io>
+maintainer:  appleprincess<apppleprincess@appleprincess.io>
+version:     0.0.0.1
+license:     MIT
+github:      appleprincess/ball
+
+dependencies:
+  - base > 4 && < 5
+
+library:
+  source-dirs: src
+
+executable:
+  source-dirs:  app
+  main:         Main.hs
