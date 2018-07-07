@@ -1,5 +1,11 @@
 {-# LANGUAGE DefaultSignatures #-}
+{-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE RankNTypes #-}
 module Unit where
+
+import FRP.Yampa.Vector3
+
+type Vector = Vector3 Double
 
 type Force        = Vector
 type Acceleration = Vector
@@ -19,52 +25,16 @@ class Unit a where
   boundary :: a -> Boundary
   update :: a -> Time -> a
 
--- | Vector component of x, y, z axes.
-newtype Vector = V (Double, Double, Double)
-               deriving (Eq, Show)
-
-ex, ey, ez :: Vector -> Double
-ex (V (x,_,_)) = x
-ey (V (_,y,_)) = y
-ez (V (_,_,z)) = z
-
-instance Num Vector where
-  V (a, b, c) + V (d, e, f) = V (a + d, b + e, c + f)
-  V (a, b, c) * V (d, e, f) = V (a * d, b * e, c * f)
-  negate (V (a, b, c))  = V (-a, -b, -c)
-  fromInteger a = V (a', a', a')
-    where a' = fromIntegral a
-  abs (V (a, b, c)) = V (abs a, abs b, abs c)
-  signum (V (a, b, c)) = V (signum a, signum b, signum c)
-
--- | Unit vector
-unitVector :: Vector
-unitVector = V (1, 1, 1)
-
--- | Dot product
-(⋅) :: Vector -> Vector -> Double
-V (a, b, c) ⋅ V (d, e, f) = a * d + b * e + c * f
-infix 7 ⋅
--- | Element-wise division
-(÷) :: Vector -> Double -> Vector
-V (a, b, c) ÷ n = V (a/n, b/n, c/n)
-infix 7 ÷
-
--- | Element-wise multiplication
-(×) :: Vector -> Double -> Vector
-(V (a, b, c)) × n = V (a*n, b*n, c*n)
-infix 7 ×
 
 newtype Boundary = B (Position, Position)
 
 -- | This function assume that the shapes of them are
 --  cuboid
 overlappedWith :: Boundary -> Boundary -> Bool
-overlappedWith (B (bap, bas)) (B (bbp, bbs)) = not $ or [ ex bap > ex bbe
-                                                        , ex bae < ex bbp
-                                                        , ey bap > ey bbe
-                                                        , ey bae < ey bbp
-                                                        , ez bap > ez bbe
-                                                        , ez bae < ez bbp]
-  where bae = bap + bas
-        bbe = bbp + bbs
+overlappedWith (B (bap, bas)) (B (bbp, bbs)) = not $ or
+  [ exap > exbe, exae < exbp, eyap > eybe
+  , eyae < eybp, ezap > ezbe , ezae < ezbp]
+  where (exap, eyap, ezap) = vector3XYZ bap
+        (exae, eyae, ezae) = vector3XYZ bas
+        (exbp, eybp, ezbp) = vector3XYZ bbp
+        (exbe, eybe, ezbe) = vector3XYZ bbs

@@ -8,6 +8,7 @@ github:      appleprincess/ball
 dependencies:
   - array
   - base > 4 && < 5
+  - Yampa
 
 library:
   source-dirs: src
@@ -17,4 +18,4 @@ executable:
   main:         Main.hs
   dependencies:
     - ball
-    - Yampa
+    - websockets
